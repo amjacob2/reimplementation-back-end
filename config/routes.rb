@@ -10,6 +10,7 @@ Rails.application.routes.draw do
       resources :roles
       resources :users
       resources :assignments
+      resources :quiz_questions
     end
   end
 end

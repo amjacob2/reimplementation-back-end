@@ -1,4 +1,7 @@
 class MultipleChoiceCheckbox < QuizQuestion
+
+  # return HTML shown to admins when editing multiple choice checkbox
+  # extends the html prefix from QuizQuestion and displays four choices as checkboxes
   def edit
     html = super
 
@@ -40,11 +43,13 @@ class MultipleChoiceCheckbox < QuizQuestion
     html
   end
 
+  # check if the format of the question and its options are correct
   def isvalid(choice_info)
     super
     if @correct_count == 1
       @valid = 'A multiple-choice checkbox question should have more than one correct answer.'
     end
+    @valid = 'valid' if @correct_count > 1
     @valid
   end
 end

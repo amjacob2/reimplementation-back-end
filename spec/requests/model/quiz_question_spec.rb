@@ -6,6 +6,8 @@ describe QuizQuestion do
   let(:quiz_question_choice2) { QuizQuestionChoice.new }
   let(:quiz_question_choice3) { QuizQuestionChoice.new }
   let(:quiz_question_choice4) { QuizQuestionChoice.new }
+
+  # create QuizQuestion object with associated QuizQuestionChoices used in tests within this file
   before(:each) do
     quiz_question.quiz_question_choices = [quiz_question_choice1, quiz_question_choice2, quiz_question_choice3, quiz_question_choice4]
     quiz_question.txt = 'Question Text'
@@ -122,6 +124,14 @@ describe QuizQuestion do
       it 'returns "Please select a correct answer for all questions"' do
         questions = { '1' => { txt: 'question text', iscorrect: false }, '2' => { txt: 'question text', iscorrect: false }, '3' => { txt: 'question text', iscorrect: false }, '4' => { txt: 'question text', iscorrect: false } }
         expect(quiz_question.isvalid(questions)).to eq('Please select a correct answer for all questions')
+      end
+    end
+  end
+  describe '#isvalid' do
+    context 'when there are more than one correct choices' do
+      it 'returns "Please select only one correct answer for all questions"' do
+        questions = questions = { '1' => { txt: 'question text', iscorrect: true }, '2' => { txt: 'question text', iscorrect: false }, '3' => { txt: 'question text', iscorrect: false }, '4' => { txt: 'question text', iscorrect: true } }
+        expect(quiz_question.isvalid(questions)).to eq('Please select only one correct answer for all questions')
       end
     end
   end

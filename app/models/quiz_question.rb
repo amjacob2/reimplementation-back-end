@@ -1,13 +1,13 @@
 class QuizQuestion < Question
   has_many :quiz_question_choices, class_name: 'QuizQuestionChoice', foreign_key: 'question_id', inverse_of: false, dependent: :nullify
 
-  #TODO: first pass at loading quiz question choices in the super to be available to all methods
-  #      needs testing before using
+  #loading quiz question choices in the super to be available to all methods
   after_initialize :load_choices
   def load_choices
     @quiz_question_choices = QuizQuestionChoice.where(question_id: id)
   end
 
+  # return HTML shown to admins when editing quiz question
   def edit 
     # provide initial html to classes that extend QuizQuestion will add to based on type
     # (e.g. MultipleChoiceCheckbox, MultipleChoiceRadio, TrueFalse)
@@ -27,6 +27,7 @@ class QuizQuestion < Question
     html
   end
 
+  # display the question and its choices to user
   def view_question_text
     html = '<b>' + txt + '</b><br />'
     html += 'Question Type: ' + type + '<br />'
@@ -43,7 +44,7 @@ class QuizQuestion < Question
     end
     html.html_safe
   end
-
+#display options for users to select from
 def complete
     quiz_question_choices = self.quiz_question_choices
     html = '<label for="' + id.to_s + '">' + txt + '</label><br>'
@@ -57,7 +58,7 @@ def complete
     end
     html
   end
-
+#displays the question and the user's answer, and indicates whether the answer was correct or not
   def view_completed_question(user_answer)
     quiz_question_choices = self.quiz_question_choices
 
@@ -82,6 +83,7 @@ def complete
     html.html_safe
   end
 
+  # Check if the format of the question and its choices are correct
   def isvalid(choice_info)
     @valid = 'valid'
     return @valid = 'Please make sure all questions have text' if txt == ''
@@ -94,6 +96,7 @@ def complete
       @correct_count += 1 if value[:iscorrect]
     end
     @valid = 'Please select a correct answer for all questions' if @correct_count.zero?
+    @valid = 'Please select only one correct answer for all questions' if @correct_count > 1
     @valid
   end
 end
